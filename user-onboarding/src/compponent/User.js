@@ -1,13 +1,18 @@
 import React from 'react';
+import { Card, CardImg, CardText, CardBody, CardTitle } from 'reactstrap';
 
 function User({ details }) {
   return (
     <div className='user-card'>
-      <img src={details.avatar} alt='user image' />
-      <h3>
-        {details.first_name} {details.last_name}
-      </h3>
-      <h2>{details.email}</h2>
+      <Card>
+        <CardImg top src={details.avatar} alt='user image' />
+        <CardBody>
+          <CardTitle>
+            {details.first_name} {details.last_name}
+          </CardTitle>
+          <CardText>{details.email}</CardText>
+        </CardBody>
+      </Card>
     </div>
   );
 }

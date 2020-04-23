@@ -21,6 +21,13 @@ const initialFormValues = {
   },
 };
 
+const initialFormErrors = {
+  first_name: '',
+  last_name: '',
+  email: '',
+  password: '',
+};
+
 //------------VALIDATION-----------
 const formSchema = yup.object().shape({
   first_name: yup.string().required('First name is required'),
@@ -39,6 +46,8 @@ function App() {
   //----------CREATE STATE------------------
   const [users, setUsers] = useState([]);
   const [formValues, setFormValues] = useState(initialFormValues);
+  const [formErrors, setFormErrors] = useState(initialFormErrors);
+  const [formDisabled, setFormDisabled] = useState(true);
 
   //----------API CALLS-------------------------
   const getUsers = () => {
@@ -57,11 +66,39 @@ function App() {
     getUsers();
   }, []);
 
+  //If the form is complete enable the button to continue----------
+  useEffect(() => {
+    formSchema.isValid(formValues).then(valid => {
+      setFormDisabled(!valid);
+    });
+  }, [formValues]);
+
   //-----------HANDLERS----------------------
   const onInputChange = event => {
     //Declare the events
     const name = event.target.name;
     const value = event.target.value;
+
+    //See if any input is missing or incorrect-----
+    yup
+      .reach(formSchema, name)
+      .validate(value)
+      .then(valid => {
+        //Validates
+        //Clear Error
+        setFormErrors({
+          ...formErrors,
+          [name]: '',
+        });
+      })
+      .catch(err => {
+        //not validate
+        //SET THE ERROR IN THE RIGHT PLACE
+        setFormErrors({
+          ...formErrors,
+          [name]: err.errors[0],
+        });
+      });
 
     setFormValues({
       ...formValues,
@@ -118,9 +155,11 @@ function App() {
         onInputChange={onInputChange}
         onCheckboxChange={onCheckboxChange}
         onSubmit={onSubmit}
+        disabled={formDisabled}
+        errors={formErrors}
       />
+      <h1>Users</h1>
       <div className='users-container'>
-        <h1>Users</h1>
         {users.map(user => {
           return <User key={user.id} details={user} />;
         })}
