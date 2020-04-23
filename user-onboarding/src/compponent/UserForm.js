@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 
 import { Alert } from 'reactstrap';
 
@@ -25,6 +25,7 @@ function UserForm({
         {/* ///////TEXT INPUTS//////// */}
         <Label>First Name:</Label>
         <Input
+          data-cy_firstname_input='cy_firstname_input'
           value={values.first_name}
           onChange={onInputChange}
           name='first_name'
@@ -32,6 +33,7 @@ function UserForm({
         />
         <Label>Last Name:</Label>
         <Input
+          data-cy_lastname_input='cy_lastname_input'
           value={values.last_name}
           onChange={onInputChange}
           name='last_name'
@@ -63,7 +65,7 @@ function UserForm({
           Terms of services
         </Label>
       </FormGroup>
-      <Button type='submit' disabled={disabled}>
+      <Button name='user_submit_form' type='submit' disabled={disabled}>
         Submit
       </Button>
     </Form>
